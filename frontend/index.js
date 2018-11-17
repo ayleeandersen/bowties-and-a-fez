@@ -1,6 +1,29 @@
 'use strict';
 (function() {
 
+    var app = {
+        start: function() {
+          this.output = $('#output');
+          this.result = $('#result');
+          var self    = this,
+            initialColor = this.result.css('background');
+          var colorPicker = $('#color-picker').spectrum({
+            chooseText: 'ok',
+            color:      initialColor,
+            move:       function(col) { self.onMove(col.toHexString()); },
+            change:     function(col) { self.onChange(col.toHexString()); },
+            hide:       function(col) { self.onHide(col.toHexString()); }
+          });
+          this.broadcast(colorPicker.spectrum('get').toHexString());
+        }
+      };
+    
+    $(function () {
+    app.start();
+    });
+
+
+
     let ws = new WebSocket("ws://127.0.0.1:5005")
     ws.onopen = function() {
         ws.send('120');

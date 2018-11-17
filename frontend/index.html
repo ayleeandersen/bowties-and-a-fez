@@ -5,14 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href="spectrum.css" rel="stylesheet" type="text/css"/>
     <link href="base.css" rel="stylesheet" type="text/css"/>
 
     <title>Canvas</title>
 </head>
 <body>
     <h1>Our cool canvas</h1>
-    <canvas id="mainCanvas" width="1000" height="800"></canvas>
+    <div class="container">
+        <div>
+            <div class="output" id="output"></div>
 
+            <div class="result-wrp">
+                <input type="color" id="color-picker" />
+                <span class="result" id="result"></span>
+            </div>
+        </div>
+
+        <canvas id="mainCanvas" width="1000" height="800"></canvas>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="spectrum.js"></script>
     <script src="index.js"></script>
 </body>
 </html>
