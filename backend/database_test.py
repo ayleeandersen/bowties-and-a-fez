@@ -1,5 +1,4 @@
-from database import Database
-import os
+from database import Databaseimport os
 
 room = Database(150)
 
