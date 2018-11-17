@@ -7,17 +7,16 @@ queue = []
 def queue_to_string():
     string = ""
     for item in queue:
-        string += '[' + item.rstrip("']").lstrip("['") +'],'
+        string += item.rstrip("']").lstrip("['") +','
     string = string[:-1]
-    return string
+    return '[' + string + ']'
 
 class SimpleChat(WebSocket):
     def handle(self):
         queue.append(self.data)
         for client in clients:
             if client != self:
-                client.send_message(self.data)
-
+                client.send_message(queue_to_string())
 
     def connected(self):
         print(self.address, 'connected')

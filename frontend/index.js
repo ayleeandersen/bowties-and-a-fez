@@ -6,18 +6,31 @@ $(document).ready(function() {
     }
 
     ws.onmessage = function(e) {
+        console.log("onmessage e.data: " + e.data);
         let jsonData = JSON.parse(e.data);
-        jsonData.forEach(ele => {
-                ctx.strokeStyle = ele['color'];
-                ctx.lineWidth = ele['strokeWidth'];
+        if (e.data[0] === "[") {
+            jsonData.forEach(element => {
+                ctx.strokeStyle = element['color'];
+                ctx.lineWidth = element['strokeWidth'];
                 ctx.beginPath();
-                let pts = ele['points'];
-                ctx.moveTo(pts[0]['x'], pts[0]['y']);
+                let pts = element['points'];
+                ctx.moveTo(pts[0]['x', pts[0]['y']]);
                 pts.forEach(point => {
-                    ctx.lineTo(point['x'], point['y']);
+                    ctx.lineTo(point['x'], element['y']);
                 });
                 ctx.stroke();
-        });
+            });
+        } else {
+            ctx.strokeStyle = jsonData['color'];
+            ctx.lineWidth = jsonData['strokeWidth'];
+            ctx.beginPath();
+            let pts = jsonData['points'];
+            ctx.moveTo(pts[0]['x'], pts[0]['y']);
+            pts.forEach(element => {
+                ctx.lineTo(element['x'], element['y']);
+            });
+            ctx.stroke();
+        }
     }
 
     ws.onerror = function(e) {
@@ -54,6 +67,7 @@ $(document).ready(function() {
             return;
         }
         let jsonstr = JSON.stringify({color, strokeWidth, points});
+        console.log("Object as json: " + jsonstr);
         ws.send(jsonstr);
     });
     canvas.addEventListener('mousemove', function(e) {
