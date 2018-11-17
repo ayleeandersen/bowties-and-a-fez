@@ -4,8 +4,9 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { CommandFactoryComponent } from './command-factory/command-factory.component';
-import { StrokeComponent } from './stroke/stroke.component';
+import { StrokeComponent } from './draw/stroke/stroke.component';
 import { CanvasComponent } from './canvas/canvas.component';
+import { InvokerComponent } from './invoker/invoker.component';
 
 @NgModule({
   declarations: [

@@ -26,6 +26,8 @@ class Client:
 
 async def connect(websocket, path):
     # Read room id
+    # print("Got connection of " + str(websocket))
+    
     room_id = await websocket.recv()
     client = Client(websocket, room_id)
     clients.add(client)
@@ -50,6 +52,7 @@ async def connect(websocket, path):
     websocket.close()
 
 if __name__ == '__main__':
+    print("Starting web socket server on 127.0.0.1:5005")
     start_server = websockets.serve(connect, '127.0.0.1', 5005, origins='localhost:4200')
 
     asyncio.get_event_loop().run_until_complete(start_server)

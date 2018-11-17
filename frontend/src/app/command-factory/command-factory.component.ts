@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs'
 import 'rxjs/add/operator/map';
+import { DrawComponent, Point } from '../draw/draw.component';
+import { StrokeComponent } from '../draw/stroke/stroke.component';
 
 @Component({
   selector: 'app-command-factory',
@@ -23,35 +25,18 @@ export class CommandFactoryComponent implements OnInit {
       "y": 250
     }
   };
-  private canvas: CanvasRenderingContext2D;
 
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
   ngOnInit() {
-    let cvs = <HTMLCanvasElement>document.getElementById("mainCanvas");
-    this.canvas = cvs.getContext("2d");
-    this.requestCommand();
   }
 
-  requestCommand(): void {
-    const endpoint: string = "http://127.0.0.1:5000/api/150";
-    // var temp = this.http.get(endpoint).subscribe(res => {
-    //   console.log(res);
-    //   command = res.stringify();
-    // });
-    this.parseJSON();
-  }
-
-  parseJSON() {
-    // todo: create Stroke class and Fill class.
-    if (this.command.commandType === "stroke") {
-      // call draw in stroke class
-      this.canvas.beginPath();
-      this.canvas.moveTo(this.command.start.x, this.command.start.y);
-      this.canvas.lineTo(this.command.end.x, this.command.end.y);
-      this.canvas.stroke();
-    } else if (this.command.commandType === "fill") {
-      // call draw in fill class
+  static createShape(name: string, args: Object): DrawComponent {
+    switch(name) {
+      case "stroke":
+        return new StrokeComponent(<Point[]> args);
+      default:
+        throw new Error("Invalid shape " + name);
     }
   }
 
