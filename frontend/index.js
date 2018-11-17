@@ -6,7 +6,22 @@ $(document).ready(function() {
     }
 
     ws.onmessage = function(e) {
-        console.log(e);
+        console.log(e.data);
+        let jsonData = JSON.parse(e.data);
+        if (e.data[0] === "[") {
+            //parse as array
+            console.log("ARRAY");
+        } else {
+            ctx.strokeStyle = jsonData['color'];
+            ctx.lineWidth = jsonData['strokeWidth'];
+            ctx.beginPath();
+            let pts = jsonData['points'];
+            ctx.moveTo(pts[0]['x'], pts[0]['y']);
+            pts.forEach(element => {
+                ctx.lineTo(element['x'], element['y']);
+            });
+            ctx.stroke();
+        }
     }
 
     ws.onerror = function(e) {
@@ -14,6 +29,7 @@ $(document).ready(function() {
     }
 
     var color;
+    var strokeWidth;
     var mouseDown = false;
     var points = [];
 
@@ -41,7 +57,7 @@ $(document).ready(function() {
         if (points.length === 0) {
             return;
         }
-        ws.send(JSON.stringify(points))
+        ws.send(JSON.stringify({color, strokeWidth, points}))
     });
     canvas.addEventListener('mousemove', function(e) {
         mouseX = e.clientX;
@@ -59,6 +75,7 @@ $(document).ready(function() {
             ctx.lineTo(point.x, point.y);
         }
         ctx.lineWidth = document.getElementById("line-width").value;
+        strokeWidth = ctx.lineWidth;
         ctx.strokeStyle = color;
         ctx.stroke();
     });
