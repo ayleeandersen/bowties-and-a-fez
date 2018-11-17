@@ -49,7 +49,7 @@ $(document).ready(function() {
 
     background.onload = function() {
         ctx.globalAlpha = 0.5;
-        ctx.drawImage(background,0,0);
+        ctx.drawImage(background,0,0, background.width, background.height, 0, 0, canvas.width, canvas.height);
         ctx.globalAlpha = 1;
     }
     // -- Jayden -------------
