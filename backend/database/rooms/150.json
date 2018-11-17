@@ -9,4 +9,4 @@
         "y":"1"
     }
 },
-{"commandType":"Stroke", "start":{"x":"10","y":"1"}, "end":{"x":"10","y":"10"} },
+{"commandType":"Stroke", "start":{"x":"10","y":"1"}, "end":{"x":"10","y":"10"} },{"commandType":"Stroke", "start":{"x":"10","y":"1"}, "end":{"x":"10","y":"10"} },
