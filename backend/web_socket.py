@@ -1,59 +1,36 @@
-import websockets
-import asyncio
-import sys
-
+from simple_websocket_server import WebSocketServer, WebSocket
 from database import Database
+import json
+
+queue = []
+
+def queue_to_string():
+    string = ""
+    for item in queue:
+        string += '[' + item.rstrip("']").lstrip("['") +'],'
+    string = string[:-1]
+    return string
+
+class SimpleChat(WebSocket):
+    def handle(self):
+        queue.append(self.data)
+        for client in clients:
+            if client != self:
+                client.send_message(self.data)
 
 
-rooms = dict()
-clients = set()
+    def connected(self):
+        print(self.address, 'connected')
+        if queue:
+            self.send_message(queue_to_string())
+        clients.append(self)
 
-class Client:
-
-    def __init__(self, websocket, room_id):
-        self.websocket = websocket
-        self.room_id = room_id
-
-    async def send(self, message):
-        await self.websocket.send(message)
-
-    async def send_all(self, messages):
-        await asyncio.wait([self.websocket.send(message) for message in messages])
-
-    async def read(self):
-        return await self.websocket.recv()
+    def handle_close(self):
+        clients.remove(self)
+        print(self.address, 'closed')
 
 
-async def connect(websocket, path):
-    # Read room id
-    room_id = await websocket.recv()
-    client = Client(websocket, room_id)
-    clients.add(client)
-    
-    print("Client connected to room", room_id)
+clients = []
 
-    database = Database(room_id)
-
-    # Send all previous JSON
-    if database.get_queue():
-        past_json = database.get_queue()
-        client.send_all(past_json)
-
-    # Receive messages from the client and send to other clients in the same room
-    while True:
-        command = client.read()
-        database.add_command(command)
-        await asyncio.wait([client.send(command) for client in clients if client.room_id == room_id])
-
-    # Remove the client and close the socket
-    clients.remove(client)
-    websocket.close()
-
-if __name__ == '__main__':
-    start_server = websockets.serve(connect, '127.0.0.1', 5005, origins='localhost:4200')
-
-    asyncio.get_event_loop().run_until_complete(start_server)
-    try:
-        asyncio.get_event_loop().run_forever()
-    except KeyboardInterrupt:
-        sys.exit()
+server = WebSocketServer('127.0.0.1', 5000, SimpleChat)
+server.serve_forever()
