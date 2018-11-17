@@ -15,8 +15,9 @@ export class CommandFactoryComponent implements OnInit {
   }
 
   requestCommand(): void {
-    const endpoint: string = "127:0.0.1:8000/api/150";
-    // var temp = this.http.get(endpoint);
+    const endpoint: string = "127:0.0.1:5000/api/150";
+    var temp = this.http.get(endpoint);
+    console.log(temp);
   }
 
 }
