@@ -35,14 +35,15 @@ async def connect(websocket, path):
     database = Database(room_id)
 
     # Send all previous JSON
-    if Database.doesRoomExist(room_id):
+    if database.get_queue():
         past_json = database.get_queue()
         client.send_all(past_json)
 
     # Receive messages from the client and send to other clients in the same room
     while True:
-        message = client.read()
-        await asyncio.wait([client.send(message) for client in clients if client.room_id == room_id])
+        command = client.read()
+        database.add_command(command)
+        await asyncio.wait([client.send(command) for client in clients if client.room_id == room_id])
 
     # Remove the client and close the socket
     clients.remove(client)
