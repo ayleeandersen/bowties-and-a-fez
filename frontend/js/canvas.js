@@ -5,6 +5,15 @@ $(document).ready(function() {
     ws.onopen = function() {
     }
 
+    function getURLParameter(name) {
+        return decodeURI(
+            (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+        );
+    }
+
+    let image = unescape(getURLParameter("src"));
+
+    var color;
     ws.onmessage = function(e) {
         console.log(e.data);
         let jsonData = JSON.parse(e.data);

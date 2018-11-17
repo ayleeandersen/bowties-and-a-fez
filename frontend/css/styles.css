@@ -1,0 +1,32 @@
+body {
+    text-align: center;
+    width: 100%;
+}
+
+p {
+    margin: 10px;
+}
+
+ul {
+    list-style: none;
+}
+
+.btn {
+    margin: 10px;
+}
+
+.my_card {
+    width: 50%;
+    margin: 10% auto;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+#selected_img, #img_list {
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+#selected_img img {
+    margin: 5px;
+}
