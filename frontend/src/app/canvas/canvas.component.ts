@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { WebsocketService } from './websocket.service';
+import { Observable, Subject } from 'rxjs/Rx'; 
 
 @Component({
   selector: 'app-canvas',
@@ -7,9 +9,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CanvasComponent implements OnInit {
 
-  constructor() { }
+  connection: Subject<any>;
+
+  constructor(private wsService : WebsocketService) { }
 
   ngOnInit() {
+    // let cvs = <HTMLCanvasElement>document.getElementById("mainCanvas");
+
+    this.connection = <Subject<any>> this.wsService
+      .connect(this.respondToMessage)
+      .map((response: any): any => {
+        return response;
+      });
+  }
+
+  private respondToMessage(data) : void {
+    console.log("Got" + data);
+  }
+
+  private sendMessage(msg) : void {
+    this.connection.next(msg);
   }
 
 }
