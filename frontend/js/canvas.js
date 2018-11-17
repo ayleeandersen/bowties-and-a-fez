@@ -1,6 +1,14 @@
 'use strict';
 $(document).ready(function() {
 
+    function getURLParameter(name) {
+        return decodeURI(
+            (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+        );
+    }
+
+    let image = unescape(getURLParameter("src"));
+
     var color;
 
     var mouseDown = false;
