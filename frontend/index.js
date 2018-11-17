@@ -1,7 +1,6 @@
 'use strict';
 
-(function() {
-
+$(document).ready(function() {
     let ws = new WebSocket("ws://127.0.0.1:5000")
     ws.onopen = function() {
     }
@@ -14,41 +13,137 @@
         console.error(e);
     }
 
-    const CANVAS_WIDTH = 1000;
-    const CANVAS_HEIGHT = 800;
-
+    var color;
     var mouseDown = false;
     var points = [];
 
     let canvas = document.getElementById("mainCanvas");
     let ctx = canvas.getContext("2d");
 
+    ctx.fillStyle = "rgba(255,255,255,0)";
+    ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+
+    let mouseX = 0;
+    let mouseY = 0;
+
     document.addEventListener('mousedown', function(e) {
-        points = [];
-        mouseDown = true;
-        ctx.beginPath();
+        let type = document.getElementById("type-selector");
+        if (type.value === "stroke") {
+            points = [];
+            mouseDown = true;
+            ctx.beginPath();
+        } else if (type.value === "fill") {
+            applyFloodFill(mouseX, mouseY, color);
+        }
     });
     document.addEventListener('mouseup', function(e) {
         mouseDown = false;
         if (points.length === 0) {
             return;
         }
-        console.log(points);
         ws.send(JSON.stringify(points))
     });
     canvas.addEventListener('mousemove', function(e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
         if (!mouseDown) {
             return;
         }
 
-        let point = {x: e.clientX - canvas.offsetLeft, y: e.clientY - canvas.offsetTop};
+        let point = {x: mouseX - canvas.offsetLeft, y: mouseY - canvas.offsetTop};
         points.push(point);
         if (points.length === 1) {
             ctx.moveTo(point.x, point.y);
         } else {
             ctx.lineTo(point.x, point.y);
         }
+        ctx.lineWidth = document.getElementById("line-width").value;
+        ctx.strokeStyle = color;
         ctx.stroke();
     });
 
-})();
+    function applyFloodFill(x, y, color) {
+        let shouldApply = function(x, y) {
+            if (x < 0 || x >= canvas.clientWidth || y < 0 || y >= canvas.clientHeight) {
+                return false;
+            }
+            let data = ctx.getImageData(x, y, 1, 1).data;
+
+            return data[3] == 0;
+        }
+
+        let hexToRgb = function(hex) {
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        let spot = ctx.createImageData(1, 1);
+        let rgb = hexToRgb(color);
+        spot.data[0] = rgb.r;
+        spot.data[1] = rgb.g;
+        spot.data[2] = rgb.b;
+        spot.data[3] = 255;
+
+        let queue = [{x:x, y:y}];
+        while (queue.length !== 0) {
+            let point = queue.shift();
+            ctx.putImageData(spot, point.x, point.y);
+
+            x = point.x;
+            y = point.y;
+            console.log(x + " " + y);
+
+            if (shouldApply(x+1, y)) queue.push({x:x+1, y:y});
+            if (shouldApply(x, y-1)) queue.push({x:x, y:y-1});
+            if (shouldApply(x-1, y)) queue.push({x:x-1, y:y});
+            if (shouldApply(x, y+1)) queue.push({x:x, y:y+1});
+        }
+    }
+
+    function applyColorPicker() {
+        var app = {
+            start: function() {
+              this.output = $('#output');
+              this.result = $('#result');
+              var self    = this,
+                initialColor = this.result.css('background');
+              var colorPicker = $('#color-picker').spectrum({
+                chooseText: 'ok',
+                color:      initialColor,
+                move:       function(col) { self.onMove(col.toHexString()); },
+                change:     function(col) { self.onChange(col.toHexString()); },
+                hide:       function(col) { self.onHide(col.toHexString()); }
+              });
+              this.broadcast(colorPicker.spectrum('get').toHexString());
+            },
+            broadcast: function(c) {
+              color = c;
+            },
+            onMove: function(color) {
+              this.result.css('background', color);
+            },
+
+            onChange: function(color) {
+              this.result.css('background', color);
+              this.broadcast(color);
+            },
+
+            onHide: function(color) {
+              this.result.css('background', color);
+              this.broadcast(color);
+            }
+          };
+
+          $(function () {
+            app.start();
+          });
+    }
+
+    applyColorPicker();
+
+});

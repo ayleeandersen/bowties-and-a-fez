@@ -16,7 +16,7 @@ class SimpleChat(WebSocket):
         queue.append(self.data)
         for client in clients:
             if client != self:
-                client.send_message(self.address[0] + u' - ' + self.data)
+                client.send_message(self.data)
 
 
     def connected(self):
@@ -28,8 +28,6 @@ class SimpleChat(WebSocket):
     def handle_close(self):
         clients.remove(self)
         print(self.address, 'closed')
-        for client in clients:
-            client.send_message(self.address[0] + u' - disconnected')
 
 
 clients = []
