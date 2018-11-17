@@ -9,9 +9,12 @@ class Database:
     def get_queue(self):
         with self.mutex:
             with open(self.file_name, "r") as IN:
-                return '[' + IN.read() + ']'
+                data = ""
+                for line in IN:
+                    data += line.rstrip()
+                return data.split('//split//')[:-1] # Removing last empty object
 
     def add_command(self,command):
         with self.mutex:
             with open(self.file_name, "a") as OUT:
-                OUT.write(command + ',')
+                OUT.write(command + '//split//')
