@@ -22,11 +22,15 @@ ul {
     border-radius: 10px;
 }
 
+#img_list {
+    padding: 0px;
+}
+
 #selected_img, #img_list {
     border: 2px solid black;
     border-radius: 10px;
 }
 
-#selected_img img {
-    margin: 5px;
+img {
+    width: 50%;
 }

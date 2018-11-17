@@ -5,6 +5,16 @@ $(document).ready(function() {
     ws.onopen = function() {
     }
 
+<<<<<<< HEAD
+=======
+    function getURLParameter(name) {
+        return decodeURI(
+            (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+        );
+    }
+
+    var color;
+>>>>>>> b2964ef55cdb9a393efabcd03097d80e556ff2a3
     ws.onmessage = function(e) {
         let jsonData = JSON.parse(e.data);
         jsonData.forEach(ele => {
@@ -31,6 +41,17 @@ $(document).ready(function() {
 
     let canvas = document.getElementById("mainCanvas");
     let ctx = canvas.getContext("2d");
+
+    // -- Background Image --
+    let background = new Image();
+    background.src = unescape(getURLParameter("src"));
+
+    background.onload = function() {
+        ctx.globalAlpha = 0.5;
+        ctx.drawImage(background,0,0, background.width, background.height, 0, 0, canvas.width, canvas.height);
+        ctx.globalAlpha = 1;
+    }
+    // -- Jayden -------------
 
     ctx.fillStyle = "rgba(255,255,255,0)";
     ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
@@ -64,7 +85,7 @@ $(document).ready(function() {
             return;
         }
 
-        let point = {x: mouseX - canvas.offsetLeft, y: mouseY - canvas.offsetTop};
+        let point = {x: mouseX - canvas.offsetLeft + window.pageXOffset, y: mouseY - canvas.offsetTop + window.pageYOffset};
         points.push(point);
         if (points.length === 1) {
             ctx.moveTo(point.x, point.y);
