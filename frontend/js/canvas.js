@@ -11,8 +11,6 @@ $(document).ready(function() {
         );
     }
 
-    let image = unescape(getURLParameter("src"));
-
     var color;
     ws.onmessage = function(e) {
         console.log(e);
@@ -28,6 +26,17 @@ $(document).ready(function() {
 
     let canvas = document.getElementById("mainCanvas");
     let ctx = canvas.getContext("2d");
+
+    // -- Background Image --
+    let background = new Image();
+    background.src = unescape(getURLParameter("src"));
+
+    background.onload = function() {
+        ctx.globalAlpha = 0.5;
+        ctx.drawImage(background,0,0);
+        ctx.globalAlpha = 1;
+    }
+    // -- Jayden -------------
 
     ctx.fillStyle = "rgba(255,255,255,0)";
     ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
