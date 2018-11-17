@@ -5,8 +5,6 @@ $(document).ready(function() {
     ws.onopen = function() {
     }
 
-<<<<<<< HEAD
-=======
     function getURLParameter(name) {
         return decodeURI(
             (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
@@ -14,7 +12,6 @@ $(document).ready(function() {
     }
 
     var color;
->>>>>>> b2964ef55cdb9a393efabcd03097d80e556ff2a3
     ws.onmessage = function(e) {
         let jsonData = JSON.parse(e.data);
         jsonData.forEach(ele => {
