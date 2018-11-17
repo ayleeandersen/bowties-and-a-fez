@@ -1,3 +1,5 @@
+/backend/database/rooms/*
+
 
 # Created by https://www.gitignore.io/api/python,django,angular,jetbrains+all
 # Edit at https://www.gitignore.io/?templates=python,django,angular,jetbrains+all
