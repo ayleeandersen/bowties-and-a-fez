@@ -6,13 +6,15 @@ import { AppComponent } from './app.component';
 import { CommandFactoryComponent } from './command-factory/command-factory.component';
 import { StrokeComponent } from './stroke/stroke.component';
 import { CanvasComponent } from './canvas/canvas.component';
+import { DrawCommandComponent } from './draw-command/draw-command.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CommandFactoryComponent,
     StrokeComponent,
-    CanvasComponent
+    CanvasComponent,
+    DrawCommandComponent
   ],
   imports: [
     BrowserModule,

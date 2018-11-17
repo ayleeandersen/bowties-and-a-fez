@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs'
 import 'rxjs/add/operator/map';
+import { DrawCommandComponent } from '../draw-command/draw-command.component';
+import { StrokeComponent } from '../stroke/stroke.component';
 
 @Component({
   selector: 'app-command-factory',
@@ -42,16 +44,12 @@ export class CommandFactoryComponent implements OnInit {
     this.parseJSON();
   }
 
-  parseJSON() {
+  parseJSON(): DrawCommandComponent {
     // todo: create Stroke class and Fill class.
     if (this.command.commandType === "stroke") {
-      // call draw in stroke class
-      this.canvas.beginPath();
-      this.canvas.moveTo(this.command.start.x, this.command.start.y);
-      this.canvas.lineTo(this.command.end.x, this.command.end.y);
-      this.canvas.stroke();
+      return new StrokeComponent(this.canvas, this.command);
     } else if (this.command.commandType === "fill") {
-      // call draw in fill class
+      // create new Stroke Class
     }
   }
 
