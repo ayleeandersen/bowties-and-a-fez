@@ -1,44 +1,26 @@
 'use strict';
-(function() {
+$(document).ready(function() {
 
-    var app = {
-        start: function() {
-          this.output = $('#output');
-          this.result = $('#result');
-          var self    = this,
-            initialColor = this.result.css('background');
-          var colorPicker = $('#color-picker').spectrum({
-            chooseText: 'ok',
-            color:      initialColor,
-            move:       function(col) { self.onMove(col.toHexString()); },
-            change:     function(col) { self.onChange(col.toHexString()); },
-            hide:       function(col) { self.onHide(col.toHexString()); }
-          });
-          this.broadcast(colorPicker.spectrum('get').toHexString());
-        }
-      };
+    // var app = {
+    //     start: function() {
+    //       this.output = $('#output');
+    //       this.result = $('#result');
+    //       var self    = this,
+    //         initialColor = this.result.css('background');
+    //       var colorPicker = $('#color-picker').spectrum({
+    //         chooseText: 'ok',
+    //         color:      initialColor,
+    //         move:       function(col) { self.onMove(col.toHexString()); },
+    //         change:     function(col) { self.onChange(col.toHexString()); },
+    //         hide:       function(col) { self.onHide(col.toHexString()); }
+    //       });
+    //       this.broadcast(colorPicker.spectrum('get').toHexString());
+    //     }
+    //   };
     
-    $(function () {
-    app.start();
-    });
-
-
-
-    let ws = new WebSocket("ws://127.0.0.1:5005")
-    ws.onopen = function() {
-        ws.send('120');
-    }
-
-    ws.onmessage = function(e) {
-        console.log(e);
-    }
-
-    ws.onerror = function(e) {
-        console.error(e);
-    }
-
-    const CANVAS_WIDTH = 1000;
-    const CANVAS_HEIGHT = 800;
+    // $(function () {
+    // app.start();
+    // });
 
     var mouseDown = false;
     var points = [];
@@ -70,7 +52,8 @@
         } else {
             ctx.lineTo(point.x, point.y);
         }
+        ctx.lineWidth=document.getElementById("lineWidth").value;
         ctx.stroke();
     });
 
-})();
+});
