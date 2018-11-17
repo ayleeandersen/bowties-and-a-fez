@@ -76,7 +76,7 @@ $(document).ready(function() {
             return;
         }
 
-        let point = {x: mouseX - canvas.offsetLeft, y: mouseY - canvas.offsetTop};
+        let point = {x: mouseX - canvas.offsetLeft + window.pageXOffset, y: mouseY - canvas.offsetTop + window.pageYOffset};
         points.push(point);
         if (points.length === 1) {
             ctx.moveTo(point.x, point.y);
