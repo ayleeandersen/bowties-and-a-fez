@@ -8,7 +8,7 @@ def queue_to_string():
     string = ""
     for item in queue:
         string += '[' + item.rstrip("']").lstrip("['") +'],'
-    string = '[' + string[:-1] + ']'
+    string = string[:-1]
     return string
 
 class SimpleChat(WebSocket):
