@@ -5,29 +5,32 @@ $(document).ready(function() {
     ws.onopen = function() {
     }
 
-<<<<<<< HEAD
-=======
-    function getURLParameter(name) {
-        return decodeURI(
-            (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
-        );
-    }
-
-    var color;
->>>>>>> b2964ef55cdb9a393efabcd03097d80e556ff2a3
     ws.onmessage = function(e) {
+        console.log("onmessage e.data: " + e.data);
         let jsonData = JSON.parse(e.data);
-        jsonData.forEach(ele => {
-                ctx.strokeStyle = ele['color'];
-                ctx.lineWidth = ele['strokeWidth'];
+        if (e.data[0] === "[") {
+            jsonData.forEach(element => {
+                ctx.strokeStyle = element['color'];
+                ctx.lineWidth = element['strokeWidth'];
                 ctx.beginPath();
-                let pts = ele['points'];
-                ctx.moveTo(pts[0]['x'], pts[0]['y']);
+                let pts = element['points'];
+                ctx.moveTo(pts[0]['x', pts[0]['y']]);
                 pts.forEach(point => {
-                    ctx.lineTo(point['x'], point['y']);
+                    ctx.lineTo(point['x'], element['y']);
                 });
                 ctx.stroke();
-        });
+            });
+        } else {
+            ctx.strokeStyle = jsonData['color'];
+            ctx.lineWidth = jsonData['strokeWidth'];
+            ctx.beginPath();
+            let pts = jsonData['points'];
+            ctx.moveTo(pts[0]['x'], pts[0]['y']);
+            pts.forEach(element => {
+                ctx.lineTo(element['x'], element['y']);
+            });
+            ctx.stroke();
+        }
     }
 
     ws.onerror = function(e) {
@@ -41,17 +44,6 @@ $(document).ready(function() {
 
     let canvas = document.getElementById("mainCanvas");
     let ctx = canvas.getContext("2d");
-
-    // -- Background Image --
-    let background = new Image();
-    background.src = unescape(getURLParameter("src"));
-
-    background.onload = function() {
-        ctx.globalAlpha = 0.5;
-        ctx.drawImage(background,0,0, background.width, background.height, 0, 0, canvas.width, canvas.height);
-        ctx.globalAlpha = 1;
-    }
-    // -- Jayden -------------
 
     ctx.fillStyle = "rgba(255,255,255,0)";
     ctx.fillRect(0, 0, canvas.clientWidth, canvas.clientHeight);
@@ -75,6 +67,7 @@ $(document).ready(function() {
             return;
         }
         let jsonstr = JSON.stringify({color, strokeWidth, points});
+        console.log("Object as json: " + jsonstr);
         ws.send(jsonstr);
     });
     canvas.addEventListener('mousemove', function(e) {
@@ -85,7 +78,7 @@ $(document).ready(function() {
             return;
         }
 
-        let point = {x: mouseX - canvas.offsetLeft + window.pageXOffset, y: mouseY - canvas.offsetTop + window.pageYOffset};
+        let point = {x: mouseX - canvas.offsetLeft, y: mouseY - canvas.offsetTop};
         points.push(point);
         if (points.length === 1) {
             ctx.moveTo(point.x, point.y);
