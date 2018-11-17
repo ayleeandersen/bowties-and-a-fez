@@ -1,9 +1,9 @@
 'use strict';
+
 (function() {
 
-    let ws = new WebSocket("ws://127.0.0.1:5005")
+    let ws = new WebSocket("ws://127.0.0.1:5000")
     ws.onopen = function() {
-        ws.send('120');
     }
 
     ws.onmessage = function(e) {
@@ -34,6 +34,7 @@
             return;
         }
         console.log(points);
+        ws.send(JSON.stringify(points))
     });
     canvas.addEventListener('mousemove', function(e) {
         if (!mouseDown) {
