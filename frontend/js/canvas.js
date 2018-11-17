@@ -1,5 +1,9 @@
 'use strict';
+
 $(document).ready(function() {
+    let ws = new WebSocket("ws://127.0.0.1:5000")
+    ws.onopen = function() {
+    }
 
     function getURLParameter(name) {
         return decodeURI(
@@ -10,7 +14,15 @@ $(document).ready(function() {
     let image = unescape(getURLParameter("src"));
 
     var color;
+    ws.onmessage = function(e) {
+        console.log(e);
+    }
 
+    ws.onerror = function(e) {
+        console.error(e);
+    }
+
+    var color;
     var mouseDown = false;
     var points = [];
 
@@ -38,6 +50,7 @@ $(document).ready(function() {
         if (points.length === 0) {
             return;
         }
+        ws.send(JSON.stringify(points))
     });
     canvas.addEventListener('mousemove', function(e) {
         mouseX = e.clientX;
@@ -65,7 +78,7 @@ $(document).ready(function() {
                 return false;
             }
             let data = ctx.getImageData(x, y, 1, 1).data;
-            
+
             return data[3] == 0;
         }
 
@@ -123,18 +136,18 @@ $(document).ready(function() {
             onMove: function(color) {
               this.result.css('background', color);
             },
-            
+
             onChange: function(color) {
               this.result.css('background', color);
               this.broadcast(color);
             },
-            
+
             onHide: function(color) {
               this.result.css('background', color);
               this.broadcast(color);
             }
           };
-        
+
           $(function () {
             app.start();
           });
